@@ -12,3 +12,8 @@ Irei usar as seguintes referencias:
 - Java COMPLETO 2023 Programação Orientada a Objetos +Projetos.
 
 Ambos são cursos da Udemy. Irei acrescentar mais à frente referências bibliográficas para permitir que o estudante consiga se aprofundar muito mais no assunto desse framework.
+
+# Projetos que consegui criar:
+Seguir as listas com o link para acessar os projetos que eu criei:
+
+- webservice-Spring-Boot-JPA-Hibernate-SQL (https://github.com/HelloWounderworld/webservice-Spring-Boot-JPA-Hibernate-SQL)
