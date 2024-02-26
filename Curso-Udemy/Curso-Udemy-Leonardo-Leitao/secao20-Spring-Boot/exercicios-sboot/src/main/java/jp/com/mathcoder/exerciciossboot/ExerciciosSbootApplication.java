@@ -1,13 +1,13 @@
-package jp.com.mathcoder.exerciciossb;
+package jp.com.mathcoder.exerciciossboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ExerciciosSbApplication {
+public class ExerciciosSbootApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ExerciciosSbApplication.class, args);
+		SpringApplication.run(ExerciciosSbootApplication.class, args);
 	}
 
 }
