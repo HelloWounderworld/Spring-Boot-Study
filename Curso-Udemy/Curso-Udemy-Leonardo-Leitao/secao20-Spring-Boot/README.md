@@ -169,11 +169,33 @@ Obs: No meu casso, não só apareceu a msg acima, mas o seguinte erro
 
 No caso, o que fiz para resolver esse problema foi o seguinte
 
-
+    @RequestMapping(method = RequestMethod.GET, path = "ola")
 
 ## Aula 05 - Aviso sobre a versão do SpringBoot:
+E aí, pessoal! Tudo bem?
+
+Partindo do pressuposto que vocês criaram o projeto com a versão mais atualizada do Spring Boot, o código feito na versão mais atualizada não vai funcionar como o código do professor Leonardo da aula a seguir. Por causa de divergência de versões está gerando um resultado diferente atualmente no método @ResquestMapping. Para evitar o problema, nós sugerimos que usem a versão 2.7.8 do Spring Boot, caso queiram continuar com as versões superiores, basta continuar a aula que no final dela quando o professor Leonardo especificar o método e o path dessa forma @RequestMapping(method = RequestMethod.GET, path = "ola") irá funcionar normalmente.
+
+Caso queiram mudar a versão, basta ir no pom.xml e mudar o conteúdo da tag version para 2.7.8 igual na imagem a seguir.
+
+    <parent>
+
+        <groupId>org.springframework.boot</groupId>
+
+        <artifactId>spring-boot-starter-parent</artifactId>
+
+        <version>2.7.8</version>
+
+        <relativePath/>
+
+    </parent>
+
+Feito quaisquer dessas soluções, o projeto estará funcionando normalmente.
+
+Bons estudos!
 
 ## Aula 06 - Primeiro Web Service:
+
 
 ## Aula 07 - Simulando Erros:
 
