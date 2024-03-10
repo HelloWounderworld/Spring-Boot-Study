@@ -195,9 +195,131 @@ Feito quaisquer dessas soluções, o projeto estará funcionando normalmente.
 Bons estudos!
 
 ## Aula 06 - Primeiro Web Service:
+Vamos, agora, criar o nosso primeiro web service.
 
+Bom, vamos criar um novo pacote, jp.com.mathcoder.exerciciossboot.controllers, dentro do pacote, jp.com.mathcoder.exerciciossboot, e dentro desse pacote, vamos criar a nossa nova classe, PrimeiroController, e nela inserimos o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    public class PrimeiroController {
+
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Vamos, agora, precisar mapear a execução desse método acima para alguma url dentro da nossa aplicação.
+
+Para isso, primeiro, na classe que criamos acima, vamos colocar uma anotação que considera a classe acima um tipo rest do controller, da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Em seguida, vamos usar o "RequestMapping" em cima do método que foi criado, pois isso é o que irá fornecer o reconhecimento da execução do método no navegador. E nela irá mostrar o que esse método estará retornando, caso tenha executado de forma correta.
+
+Bom, visto que foi mapeado a url acima, o conceito por trás do que aplicamos acima, está em exatamente no padrão "method = RequestMethod.GET" definido pelo "RequestMapping", que tem haver com um assunto sobre o protocolo HTTP que será abordado mais para frente. Por hora, aplicando o conceito acima no nosso código abaixo
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        @RequestMapping(method = RequestMethod.GET)
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Ao rodarmos no navegador, localhost:8080, veremos que a msg de texto do método, ola, foi exibido de forma bem feita.
+
+Agora, se quisermos que o método, ola, que temos acima seja executado por via de uma path que requisitamos via url? Ou seja, quero que o método acima seja executado, somente, quando chamo a path, localhost:8080/ola, no navegador. Para isso, vamos colocar o path dentro do "RequestMapping" da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        @RequestMapping(method = RequestMethod.GET, path = "/ola")
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Ou seja, o que signinfica, depois que colocarmos a path acima? Significa que se chegar um tipo de requisição, GET, dentro da path, localhost:8080/ola, será executado o método, ola, que foi definido na classe acima.
+
+Como prova disso, note que, ao rodarmos o nosso projeto Spring Boot, na path, localhost:8080, que é a página principal/main, será exibido, novamente, a msg de texto de erro que foi exibido na última aula. Entretanto, ao batermos no link, localhost:8080/ola, vamos ver que será exibido a msg de texto do método, ola, que definimos na classe, PrimeiroController.
+
+Temos uma outra forma que já determina o tipo de request que estaremos realizando sobre um método que fizemos acima manualmente, dizendo que ela deve ser feito via GET. Seria o GetMapping, da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        @GetMapping
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Claro, visto que não definimos a path acima, ao batermos no link, localhost:8080, iremos ver que o método, ola, foi executado como um GET e será exibido a msg de texto que foi definido nela. Bom, caso quisermos colocar alguma path, na anotação acima, basta realizarmos da mesma forma como fizemos para a anotação, RequestMapping, como seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        @GetMapping(path = "/ola")
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Assim, ao batermos o link, localhost:8080/ola, vamos conseguir verificar que o método, ola, foi executado com a requisição GET na path, localhost:8080/ola.
+
+Podemos, também, definir um conjunto de path onde o mesmo método seja executado, definindo as paths como um array dentro do atributo, path, da notação, GetMapping, da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    public class PrimeiroController {
+
+        @GetMapping(path = {"/ola", "/hello", "/howdy"})
+        public String ola() {
+            return "Olá Spring Boot!";
+        }
+    }
+
+Ou seja, na forma como definimos acima, significa que se visitarmos quaisquer uma das seguintes paths, localhost:8080/ola, localhost:8080/hello ou localhost:8080/howdy, o método, ola, será executado como uma requisição, GET.
 
 ## Aula 07 - Simulando Erros:
+
 
 ## Aula 08 - Web Service Retornando Objeto:
 
