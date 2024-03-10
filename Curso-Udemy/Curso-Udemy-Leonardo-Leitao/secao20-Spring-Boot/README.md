@@ -592,13 +592,26 @@ Bom, não necessariamente, é preciso colocar o atributo "path" dentro da marca�
     }
 
 
-## Aula 09 - Formato JSON:
+## Aula 09 - Formato JSON (JavaScript Object Notation):
+Basicamente, o JSON ele é um formato de um objeto que serve para transferirmos dados entre sistemas em forma de texto. Praticamente, hoje em dia, quaisquer outras linguagens de programação ou até mesmo os seus derivados frameworks ou, até mesmo, no uso do back-end para conseguirmos enviar informações, se utiliza o JSON para enviarmos informações de sistemas para outros sistemas ou do Front-End para Back-End, para o mesmo sistema.
+
+Bom, para quem já estudou JavaScript ou banco de dados não relacional, Firebase ou MongoBD, por exemplo, pode pular essa aula, pois nela se estuda a estrutura JSON para definirmos os objetos e a maneira como conseguimos manipular esse objeto dentro dessa linguagem.
+
+Deixarei alguns links de leitura para o estudante conseguir entender melhor sobre o Json.
 
 Seguir o link:
 
     https://jsonformatter.curiousconcept.com/
 
+Seguir link de leitura:
+
+    https://en.wikipedia.org/wiki/JSON
+    https://tecnoblog.net/responde/o-que-e-json-guia-para-iniciantes/
+    https://rockcontent.com/br/blog/json/
+    https://www.devmedia.com.br/o-que-e-json/23166
+
 ## Aula 10 - Métodos HTTP #01:
+
 
 ## Aula 11 - Métodos HTTP #02:
 
