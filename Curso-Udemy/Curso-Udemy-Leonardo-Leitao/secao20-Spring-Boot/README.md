@@ -414,9 +414,189 @@ Isso é por conta do fato de que, quanto mais implementações formos colocar de
 Bom, basicamente, no cenário em que abordamos, mostramos que mapear dois métodos para uma mesma url não pode, visto o tipo de requisição HTTP são iguais, porém, para requisições diferentes, podemos, sim, mapear dois métodos para a mesma URL.
 
 ## Aula 08 - Web Service Retornando Objeto:
+Vamos, agora, verificar o que acontece quando, em vez de uma String, retornarmos um objeto dentro de um método do Spring Boot.
+
+Ou seja, até agora, na classe, PrimeiroController, do método, ola, retornamos um texto. Se retornarmos um objeto o que será que vai acontecer?
+
+Para isso, vamos realizar os seguintes preparativos. Criamos um novo pacote, jp.com.mathcoder.exerciciossboot.models, dentro do pacote, jp.com.mathcoder.exerciciossboot, e nesse novo pacote criamos uma nova classe, Cliente, e realizamos a seguinte implementação
+
+    package jp.com.mathcoder.exerciciossboot.models;
+
+    public class Cliente {
+
+        private int id;
+        private String nome;
+        private String cpf;
+        
+        public Cliente(int id, String nome, String cpf) {
+            super();
+            this.id = id;
+            this.nome = nome;
+            this.cpf = cpf;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        public String getCpf() {
+            return cpf;
+        }
+
+        public void setCpf(String cpf) {
+            this.cpf = cpf;
+        }
+        
+    }
+
+Agora, dentro do pacote, jp.com.mathcoder.exerciciossboot.controllers, vamos criar uma nova classe, ClienteController, e nela realizamos a seguinte implementação
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    public class ClienteController {
+
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+    }
+
+Agora, vamos colocar as anotações para que o Spring reconheça a maneira como essa classe deve ser executada.
+
+Então, colocamos as marcações da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    public class ClienteController {
+
+        @GetMapping(path = "/clientes/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+    }
+
+Agora, vamos bater no link, localhost:8080/clientes/qualquer, e vemos o que é exibido na aplicação.
+
+Note que, foi devolvido um objeto em forma de Json da seguinte forma
+
+    {"id":28,"nome":"Pedro","cpf":"123.456.789-10"}
+
+Que é um formato chamado, JSON, que é uma forma de identação de objetos que é muito usado nos dias atuais pela sua alta utilidade.
+
+Inclusive podemos instalar uma extensão no seu navegador Chrome para termos a melhor visualização de um objeto tipo JSON, chamado JSON Viewer
+
+    https://chromewebstore.google.com/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh?hl=pt-BR
+
+Feito a instalação da extensão acima, podemos tornar ela exibido, clicando no ícone de puzzle, como segue na imagem abaixo
+
+![ìcone puzzle](extension-json.png)
+
+Assim, irá mostrar um alfinete/Pin desmarcado e bastaria marcar como na imagem abaixo
+
+![ìcone puzzle](extension-json-puzzle-pin.png)
+
+Assim, irá exibir a extensão JSON Viewer.
+
+Note que, quando abrimos alguma navegador que não temos nenhum uso desse JSON, essa extensão fica inativa, porém, quando entramos em um navegador que utiliza da exibição em formato de JSON, a extensão ativa automaticamente.
+
+    // 20240310173726
+    // http://localhost:8080/clientes/qualquer
+
+    {
+    "id": 28,
+    "nome": "Pedro",
+    "cpf": "123.456.789-10"
+    }
+
+Agora, lembra quando aplicamos a marcação, RequestMapping, sobre um método? 
+
+Essa marcação, podemos realizar sobre a classe da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping(path = "/clientes")
+    public class ClienteController {
+
+        @GetMapping(path = "/clientes/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+    }
+
+Ou seja, a marcação, RequestMapping, acima nos torna claro que a path, clientes, será a path principal dessa classe e todos os métodos que definirmos dentro dessa classe, estará confinados dentro dessa path. De modo que, podemos tirar, /clientes, dentro da path que foi definido sobre o método, obterCliente, como segue
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping(path = "/clientes")
+    public class ClienteController {
+
+        @GetMapping(path = "/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+    }
+
+Ou seja, a path, /qualquer, que definimos sobre o método, obterCliente, visto que a path, /clientes, foi definido sobre a classe, ClienteController, irá significar o seguinte, /clientes/qualquer. Logo, no navegador, para que o método seja executado, teremos que bater no link, localhost:8080/clientes/qualquer.
+
+Bom, não necessariamente, é preciso colocar o atributo "path" dentro da marcação para conseguirmos definir a path. Bastaria colocar o nome da path, como segue, que irá funcionar da mesma forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping("/clientes")
+    public class ClienteController {
+
+        @GetMapping("/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+    }
 
 
 ## Aula 09 - Formato JSON:
+
+Seguir o link:
+
+    https://jsonformatter.curiousconcept.com/
 
 ## Aula 10 - Métodos HTTP #01:
 
