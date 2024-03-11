@@ -611,7 +611,13 @@ Seguir link de leitura:
     https://www.devmedia.com.br/o-que-e-json/23166
 
 ## Aula 10 - Métodos HTTP #01:
+Antes de abordarmos, de fato, o assunto sobre métodos HTTP, na finalidade de conseguir facilitar o entendimento do método HTTP, vamos abordar sobre um conceito chamado "Pilha de protocolo".
 
+Seguir link de leitura:
+
+    https://pt.wikipedia.org/wiki/Hypertext_Transfer_Protocol#:~:text=O%20protocolo%20HTTP%20define%20oito,da%20requisi%C3%A7%C3%A3o%20de%20um%20recurso.
+    https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods
+    https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/HTTP-methods
 
 ## Aula 11 - Métodos HTTP #02:
 
