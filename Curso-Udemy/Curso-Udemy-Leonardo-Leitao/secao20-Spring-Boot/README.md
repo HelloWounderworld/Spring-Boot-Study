@@ -613,6 +613,42 @@ Seguir link de leitura:
 ## Aula 10 - Métodos HTTP #01:
 Antes de abordarmos, de fato, o assunto sobre métodos HTTP, na finalidade de conseguir facilitar o entendimento do método HTTP, vamos abordar sobre um conceito chamado "Pilha de protocolo".
 
+São várias camadas que existem dentro dessa pilha. A grosso modo, podemos dividir nas seguinte camadas em ordem crescente:
+
+- Física
+
+- Internet/Rede: Nessa camada temos o protocolo IP.
+
+- Transporte: Aqui temos o protocolo TCP
+
+- Aplicação: Aqui temos o protocolo HTTP (Hyper Text Transfere Protocol). Bom, o termo HT - "Hyper Text", facilita o seu entendimento quando imaginamos o seguinte cenário. Suponhamos que vc esteja lendo um livro de forma física. Ou seja, em suas mãos tem um conjunto de blocos de papeis e que vc esteja consumindo, pela leitura, o que consta dentro dela. Daí, durante a leitura, suponhamos que seja mecionado alguma referência. Basicamente, nesse contexto em que vc tem algum livro físico em mãos para conseguir acessar essa referência que nela foi mencionada, vc terá que se dirigir em algum lugar que tenha tal livro para vc conseguir verificar, correto? Entretanto, no Hyper Text, basicamente, ele te permite que vc não precise realizar todo esse trabalho. Durante a leitura, desta vez, feita de maneira virtual, quando é citado alguma referência, em cima dela vc consegue realizar uma marcação para que, quando o leitor clica em cima dela, te direciona imediatamente para a referência que vc quis consultar. Ou seja, isso deu origem ao HTML (Hyper Text Marcation Language). E o que nos permite que tais marcações sejam realizadas (ou tais links sejam realizadas), é o HTTP, dos dois últimos termos "Transfer Protocol", que é o protocolo que permite que ocorra a comunicação com outros Hyper Texts.
+
+O nosso foco dessa aula é entender o HTTP. Não iremos abordar de forma profunda o conceito de pilhas de protocolo.
+
+Basicamente, em HTTP, ela é regido por 8 métodos, são elas:
+
+- GET: Serve para obter/ler informações do servidor, apenas.
+
+- POST: Serve para submeter/cadastrar alguma informação no servidor. Ou seja, quando vc envia alguma informação ao servidor e é marcado no servidor. Ou seja, ocasiona alguma alteração no sevidor.
+
+- PUT: Serve para vc alterar alguma informação dentro do servidor. A alteração dessa informação no servidor é total. É muito comum utilizar esse método em API Rest Full.
+
+- PATCH: Serve, também, para vc realizar alguma alteração na informação que está salva dentro do servidor. Mas a diferença desse método com o PUT, é que a alteração é parcial.
+
+- DELETE: Serve para remover alguma informação dentro do servidor.
+
+- OPTIONS: Nos permite verificar quais métodos HTTPs uma url suporta, ou que foi configurado nela.
+
+- TRACE: Serve como uma requisição para realizar alguns testes.
+
+- HEAD: É uma requisição que se parece muito com GET, mas sem o retorno do corpo texto/body. Serve para vc realizar teste se um determinado url está, de fato, funcionando.
+
+Vale lembrar que a relação com HTTP com o servidor, se deve com base da Requisição/Request e Resposta/Response. Ou seja, o tipo de Requisição quem define são os métodos mencionados acima que é enviado ao servidor. E o tipo de Resposta é o que o servidor nos fornece com base da requisição, se é apenas uma resposta de leitura/sem alteração, quando se é o GET, se é uma resposta com alguma alteração, que é vinda da requisição POST, e assim para outros métodos de requisição que temos acima.
+
+Outro ponto que devemos ressaltar, é que os métodos que foi mencionados acima que servem para realizar alguma alteração no servidor, não significa que elas realizam estritamente o que foi mencionado acima. Ou seja, podemos usar algum dos métodos acima que altera algumas informações no servidor para realizar consultas também. Claro, não será necessariamente que nem o GET.
+
+Existem outros API Rest Full que nos ajudaria a entender o ponto que citei acima, por exemplo, GAPHQL. Nesse método de consulta, vemos que para inserir informações dentro do servidor utiliza-se o método POST, mas para excluir alguma informação dentro do servidor se utiliza o método POST também. E o método GET, ela serve para consulta e inserção de informações. No caso, os métodos que eu mencionei acima, não necessariamente, são fieis ao que defini a grosso modo. Mas, o que é geralmente atribúidas à elas.
+
 Seguir link de leitura:
 
     https://pt.wikipedia.org/wiki/Hypertext_Transfer_Protocol#:~:text=O%20protocolo%20HTTP%20define%20oito,da%20requisi%C3%A7%C3%A3o%20de%20um%20recurso.
@@ -620,6 +656,9 @@ Seguir link de leitura:
     https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/HTTP-methods
 
 ## Aula 11 - Métodos HTTP #02:
+Vamos aplicar o conceito teórico que abordamos acima, para verificar isso na prática.
+
+
 
 ## Aula 12 - Usando Postman:
 
