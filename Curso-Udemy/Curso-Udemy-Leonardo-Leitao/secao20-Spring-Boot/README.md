@@ -760,7 +760,41 @@ que foi definido no método, post, que está sobre o marcador @PostMappgin.
 Bom, o teste das outras requisições, podemos realizar apenas alterando "method" para outras requisições como "get", "put", "patch" e "delete". Mas, existe uma forma mais pragmática de realizarmos esses testes que é usando o Postman, que é o que iremos abordar na próxima aula.
 
 ## Aula 12 - Usando Postman:
+Vamos, primeiro, instalar a ferramenta, Postman, acessando pelo seguinte link
 
+    https://www.postman.com/
+
+Os passo a passo para realizar o Download são bem simples.
+
+Agora, aberto o Postman em "My Workspace" que é vinda por padrão, o seu espaço de trabalho, como segue na imagem abaixo
+
+![My Workspace](postman-workspace.png)
+
+Agora, clicando no ícone "+" iremos ter a seguinte janela
+
+![My Workspace](postman-workspace-request.png)
+
+Daí, teremos a seguinte janela sendo aberta
+
+![My Workspace](postman-request-window.png)
+
+Onde estiver escrito "Enter URL or paste text" iremos colocar a url, http://localhost:8080/metodos, como segue
+
+![My Workspace](postman-request-test.png)
+
+Daí, onde estiver escrito "GET", ao clicarmos nela, conseguiremos ver outras requisições aparecendo. Basicamente, a url, http://localhost:8080/metodos, está habilitado para dar conta de 5 tipos de requisições GET, POST, PUT, PATCH e DELETE, pois configuramos isso nos métodos, quando criamos a classe, MetodosHttpController, pelas marcações @GetMapping, @PostMapping, etc... que colocamos sobre cada método.
+
+Assim, por padrão, como está definido como requisição "GET", então vamos clicar no "Send" que aparece ao lado da aba onde foi colocado a url. Se ela estiver, de fato, pegando batendo no link correto que roda a classe, MetodoHttpController, que criamos nas aulas anteriores e com a requisição, GET, então o método que deverá ser acionado é o que estiver mapeado com @GetMapping, o get(), assim, deverá aparecer a msg de texto que foi definido como retorno nela "Requisição GET", como consta na imagem abaixo
+
+![My Workspace](postman-get-request.png)
+
+Assim, como se irmos mudando de tipo de requisição, dentro das opções que conseguimos ver no Postman, ao clicarmos na aba onde estiver mostrando "GET", vamos conseguir ir vendo à quem está sendo requisitado
+
+![My Workspace](postman-post-request.png)
+
+Bom, claro, que se testarmos outras requisições que não estiver definido sobre a url nem todas elas irá mostrar algum retorno.
+
+O Postman é uma ferramenta bem útil, pois ela nos possibilita em testar as requisições sobre uma url, sem a necessidade de termos que ficar criando algum arquivo ou classe para conseguirmos testar tais requisições sobre uma url.
 
 ## Aula 13 - Passando Parâmetros para Web Service #01:
 
