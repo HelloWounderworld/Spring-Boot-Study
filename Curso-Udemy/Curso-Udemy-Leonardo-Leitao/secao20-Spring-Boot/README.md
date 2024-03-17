@@ -1114,6 +1114,8 @@ Assim, as dependências acrescentadas ficariam como seguinte
 
     </project>
 
+Ao concusltarmos no "Progress" pelo eclipse, irá mostrar que estará sendo baixado as dependências que apontamos nesse arquivo, pom.xml.
+
 Agora, no application.properties, que está em, src/main/resources, vamos ter que acrescentar o seguinte
 
     spring.datasource.url=jdbc:mysql://localhost:3306/springboot
@@ -1128,6 +1130,8 @@ Claro, em username e o password com o que vc definiu ao MySQL server.
 Agora, vamos criar uma base, springboot, na base MySQL, usando o WorkBench.
 
 Bom, assim, está pronto o ambiente para conseguirmos começar a realizar as devidas implementações.
+
+Para verificarmos que ocorreu certo, bastaria rodar, novamente, o projeto e no console não irá exibir nenhum erro e, além disso, continuamos a conseguir acessar a url, http://localhost:8080/ola, sem nenhum problema.
 
 ## Aula 22 - Inserir Produto #01:
 
