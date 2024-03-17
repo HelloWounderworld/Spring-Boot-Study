@@ -953,9 +953,10 @@ Ou seja, caso eu não passe nenhum parâmetro na url, http://localhost:8080/clie
 
 Bom, e é dessa forma que conseguimos passar os parâmetros em uma url.
 
-## Aula 15 - Desafio Web Service Calculadora:
+## Aula 15 e 16 - Desafio Web Service Calculadora e Resposta:
+Vamos preparar o ambiente para o desafio.
 
-## Aula 16 - Desafio Web Service Calculadora - Resposta:
+No pacote, jp.com.mathcoder.exerciciossboot.controllers, criamos uma classe, CalculadoraController. E queremos que vc crie um web service que atenda a seguinte url, /calculadora/somar/10/20. Ou seja, que a classe seja atendida pela path, /calculadora, e que dentro dessa classe tenha um método que some dois números e que o método esteja vinculado à path, /somar, e que pegue os dois números, 10 e 20, que aparecem na path e que realize a tal soma e, donde o seu resultado, seja retornado como resposta. O mesmo que seja realizado pela path, /calculadora/subtrair?a=10&b=20.
 
 ## Aula 17 - Próxima Aula: Padrão MVC:
 
