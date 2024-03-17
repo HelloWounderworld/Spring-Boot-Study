@@ -831,12 +831,127 @@ Agora, vamos testar se o método, obterClientePorId1, que definimos está funcio
     // http://localhost:8080/clientes/328
 
     {
-    "id": 328,
-    "nome": "Maria",
-    "cpf": "987.654.321-00"
+        "id": 328,
+        "nome": "Maria",
+        "cpf": "987.654.321-00"
     }
 
 ## Aula 14 - Passando Parâmetros para Web Service #02:
+Nessa aula, vamos continuar com o mesmo foco da última aula, mas iremos mostrar uma outra forma de passarmos os parâmetros a partir de uma requisição para o Web service.
+
+Bom, na última aula, definimos uma forma que é passando o parâmetro diretamente na url, http://localhost:8080/clientes/328, onde, neste exemplo, ela pega o número "328" para acionar o método, obterCleintesPorId1, como uma requisição "GET". Porém, precisamos entender que essa não é a forma padrão de se passar uma parâmetro em uma requisição.
+
+O protocolo HTTP, elas definem que o padrão para se passar os parâmetros seja em um seguinte formato, http://localhost:8080/clientes?id=328&nome=Teste&rua=ABC, ou seja, usa-se "?" para indicar que será passado alguma parâmetro e o "&" (and) para caso vc queira passar mais de um parâmetro. Como um exemplo prático disso, se vc jogar, por exemplo, o seguinte link no navegador
+
+    https://www.google.com/search?q=Linux+Ubuntu
+
+Ela irá entender que tem que ser feito uma busca usando o parâmetro "Linux+Ubuntu" e irá mostrar a seguinte janela
+
+![Google Serach By Path](http-protocol-example.png)
+
+Ou seja, significa que estamos realizando uma pesquisa "Linux Ubuntu", mas em vez de utilizarmos a aplicação, estamos realizando isso via url. Inclusive, se jogarmos a url exemplo acima no postman com requisição, GET, ela irá retornar o html da página inteirinha da imagem acima.
+
+Obviamente, podemos brincar mais ainda no exemplo do link que passamos acima. Note que, quando vc jogar a url que mandei acima no navegador, ela irá retornar com o idioma que vc definiu como padrão para a sua máquina. Mas, podemos também, definir que ela retorne com uma outra língua, acrescentando mais um parâmetro utilizando "&" como seguinte
+
+    https://www.google.com/search?q=Linux+Ubuntu&hl=en
+
+Assim, ela irá retornar o seguinte
+
+![Google Serach By Path](http-protocol-example-en.png)
+
+E, claro, dentro dos parâmetros que passamos acima "q=" "hl=" elas tem sim o seu significado. Ou seja, a lógica é o mesmo que observamos na classe, ClienteController, onde nela foi definido uma path "clientes" e dentro dela acionamos o método, obterClientePorId1, e esse método, pegou o parâmetro que passei e fez uma requisição get na classe, Cliente. A mesma lógica se aplica na url, https://www.google.com/search?q=Linux+Ubuntu&hl=en, que batemos acima. Ou seja, provavelmente, ela bateu em alguma classe de controller que está definido com a path, search, do projeto, google.com, e essa classe controller pegou os parâmetros "Linux+Ubuntu" e "en" e acionou algum método que considera esses dois parâmetros. E por sua vez, esse método chamou alguma classe que implementado os parâmetros que definimos acima, ela nos retorna, como resposta, um html com vários Hyper Links marcados sobre vários Hyper Tests.
+
+Mas, claro, tais abordagens acima de HTTP são bem legais, mas, ao mesmo tempo, nos mostra os seus prós e viéses para serem utilizados, quando se trata de segurança e dados sigilosos. Por exemplo, se por um acaso quisermos realizar algum acesso de login e que tal acesso ela seja possível passando os parâmetros do username e password da forma como mostramos acima, com certeza, isso é uma evidência de uma falta de segurança, pois vc terá a sua senha exposta, caso estiver tendo algum processo de monitoramento do uso seu da aplicação por alguma outra pessoa que não tenha boas intenções. E é para isso que temos o protocolo HTTP+S, ou seja, HTTPS, onde o "S" nesse protocolo indica "Secure", de seguro, para evitar esse tipo de problema do cenário acima.
+
+Bom, vamos aprender na prática como configurar os parâmetros que abordamos acima, utilizando o link da google.
+
+No caso, na classe, ClienteContoller, do pacote, jp.com.mathcoder.exerciciossboot.controllers, realizamos a seguinte implementação
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping("/clientes")
+    public class ClienteController {
+
+        @GetMapping("/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+        
+        @GetMapping("/{id}")
+        public Cliente obterClientePorId1(@PathVariable int id) {
+            return new Cliente(id, "Maria", "987.654.321-00");
+        }
+        
+        @GetMapping
+        public Cliente obterClientePorId2(@RequestParam(name = "id") int id) {
+            return new Cliente(id, "Joao Agusto", "987.654.321-00");
+        }
+    }
+
+Feito a implementação do método, obterClientePorId2, como segue acima, vamos, agora, bater no link, http://localhost:8080/clientes?id=159, assim se retornar algum Json como abaixo, significa que deu certo
+
+    // 20240317170416
+    // http://localhost:8080/clientes?id=159
+
+    {
+        "id": 159,
+        "nome": "Joao Agusto",
+        "cpf": "987.654.321-00"
+    }
+
+Bom, dentro do marcador, @RequestParam, podemos definir mais e mais condições, por exemplo
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping("/clientes")
+    public class ClienteController {
+
+        @GetMapping("/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+        
+        @GetMapping("/{id}")
+        public Cliente obterClientePorId1(@PathVariable int id) {
+            return new Cliente(id, "Maria", "987.654.321-00");
+        }
+        
+        @GetMapping
+        public Cliente obterClientePorId2(@RequestParam(name = "id", defaultValue = "1") int id) {
+            return new Cliente(id, "Joao Agusto", "987.654.321-00");
+        }
+    }
+
+Ou seja, caso eu não passe nenhum parâmetro na url, http://localhost:8080/clientes, então o valor padrão do "id" será "1". Assim, se batermos na url sem o parâmetro e voltar o json abaixo, significa que a configuração do valor padrão foi definida com sucesso
+
+    // 20240317170726
+    // http://localhost:8080/clientes
+
+    {
+        "id": 1,
+        "nome": "Joao Agusto",
+        "cpf": "987.654.321-00"
+    }
+
+Bom, e é dessa forma que conseguimos passar os parâmetros em uma url.
 
 ## Aula 15 - Desafio Web Service Calculadora:
 
