@@ -778,7 +778,7 @@ Daí, teremos a seguinte janela sendo aberta
 
 ![My Workspace](postman-request-window.png)
 
-Onde estiver escrito "Enter URL or paste text" iremos colocar a url, http://localhost:8080/metodos, como segue
+Onde estiver escrito "Enter URL or paste text" iremos colocar a url, http://localhost:8080/metodos, como segue (claro, vc precisa rodar o seu projeto na porta 8080 para conseguirmos realizar tais testes de requisição)
 
 ![My Workspace](postman-request-test.png)
 
@@ -797,6 +797,44 @@ Bom, claro, que se testarmos outras requisições que não estiver definido sobr
 O Postman é uma ferramenta bem útil, pois ela nos possibilita em testar as requisições sobre uma url, sem a necessidade de termos que ficar criando algum arquivo ou classe para conseguirmos testar tais requisições sobre uma url.
 
 ## Aula 13 - Passando Parâmetros para Web Service #01:
+Bom, iremos mostrar as formas de conseguirmos passar alguns parâmetros a partir de uma requisição para dentro do seu web service. Iremos mostrar duas formas.
+
+Bom, na classe, ClienteController, do pacote, jp.com.mathcoder.exerciciossboot.controllers, vamos precisar realizar algumas implementações como segue
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.Cliente;
+
+    @RestController
+    @RequestMapping("/clientes")
+    public class ClienteController {
+
+        @GetMapping("/qualquer")
+        public Cliente obterCliente() {
+            return new Cliente(28, "Pedro", "123.456.789-10");
+        }
+        
+        @GetMapping("/{id}")
+        public Cliente obterClientePorId1(@PathVariable int id) {
+            return new Cliente(id, "Maria", "987.654.321-00");
+        }
+    }
+
+Agora, vamos testar se o método, obterClientePorId1, que definimos está funcionando. Basicamente, o que fizemos acima, seria que o método, obterClientePorId1, funcione ao colocarmos algum número "id" dentro da path. Ou seja, por exemplo, quando batermos no link, http://localhost:8080/clientes/328, o número inteiro "328" que eu passei na path, seja pego como argumento dentro do "int id" definido dentro desse método, e nos retorne o cliente que acabamos de definir. Como teste, vamos bater no link, http://localhost:8080/clientes/328, assim se no navegador for retornado um Json com dos dados do Cliente como seguinte, significa que deu certo
+
+    // 20240317163249
+    // http://localhost:8080/clientes/328
+
+    {
+    "id": 328,
+    "nome": "Maria",
+    "cpf": "987.654.321-00"
+    }
 
 ## Aula 14 - Passando Parâmetros para Web Service #02:
 
