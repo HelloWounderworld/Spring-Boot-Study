@@ -958,15 +958,176 @@ Vamos preparar o ambiente para o desafio.
 
 No pacote, jp.com.mathcoder.exerciciossboot.controllers, criamos uma classe, CalculadoraController. E queremos que vc crie um web service que atenda a seguinte url, /calculadora/somar/10/20. Ou seja, que a classe seja atendida pela path, /calculadora, e que dentro dessa classe tenha um método que some dois números e que o método esteja vinculado à path, /somar, e que pegue os dois números, 10 e 20, que aparecem na path e que realize a tal soma e, donde o seu resultado, seja retornado como resposta. O mesmo que seja realizado pela path, /calculadora/subtrair?a=10&b=20.
 
-## Aula 17 - Próxima Aula: Padrão MVC:
+## Aula 17, 18 e 19 - Padrão MVC & Spring Boot:
+Deixarei um link de um vídeo do karatê Kid, para te dar uma motivação de entender a importância do fundamento dos conceitos que será feita na próxima aula sobre Padrão MVC com Spring Boot
 
-## Aula 18 - Padrão MVC (Model - View - Controller):
+    https://www.youtube.com/watch?v=G6f0w5BRasw
 
-## Aula 19 - Padrão MVC & Spring Boot:
+Agora, vamos lá, tente responder as seguinte perguntas:
+
+O que é sigla MVC?
+
+Qual é a primeira camada do MVC que será acessado ao realizar alguma requisião sobre o MVC?
+
+Seguir link para leitura:
+
+    https://www.devmedia.com.br/introducao-ao-padrao-mvc/29308
+
+    https://pt.wikipedia.org/wiki/MVC
+
+    https://pt.stackoverflow.com/questions/55486/o-que-%C3%A9-mvc-model-view-controller#:~:text=2%20Respostas&text=MVC%20%C3%A9%20nada%20mais%20que,camada%20de%20controle(controller).
+
+    https://pt.stackoverflow.com/tags/mvc/info
+
+    https://stackoverflow.com/questions/26685/what-is-mvc-and-what-are-the-advantages-of-it
+
+MVC (Model View Controller):
+
+- Model:
+
+    É o coração da sua aplicação. Geralmente, residem nela os códigos voltados para Regra de Negócio, Entidades, Camada de Acesso à Dados, tudo que contém em sua aplicação em termos de regra de negócios e suas validações, estarão no Model. Essa camada, é o que entra em acesso ao servidor (banco de dados, etc...)
+
+- View:
+
+    Serve para renderizar as respostas, sejam elas em aplicações desktop, web. Basicamente, é responsável por renderizar a pagina como uma resposta à requisição. Rendrizar a página, significa que vc irá trabalhar na View com JavaScript, CSS, HTML ou Template de Engine.
+
+- Controller:
+
+    No meio entre View e Model, está o controller, que serve, exatamente, para controlar o fluxo dos tipos de aplicações.
+
+Entenda o MVC como se fosse um prédio de uma empresa. E suponhamos, com esse prédio que tenha as suas seguranças, vc tenha que realizar algum envio de alguma carta, mas não sabe para quem de qual setor vc precisa enviar. A única coisa que vc tem na carta é o nome da pessoa. Então, a primeira coisa que vc faz é entrar nesse prédio e a primeira coisa que vc verá será a recepcionista, que te fornecerá o andar, setor, departamento, sala, onde vc poderá levar a carta, ou seja, ela te fornecerá as informações necessárias que uma requisição precisa entregar. Note que, a recepcionista, está cumprindo o papel de um tipo de framework mvc (em outras palavras, front-controller), que na prática, a recepcionista irá consultar algum caderno que contém as informações de onde cada pessoa do prédio estará, onde isso no framework é análogo no momento em que ocorre a leitura de um arquivo meta-dado (xml, json, etc...) onde estará informando os mapeamentos das rotas para qual tipo de método está sendo apontado, que no contexto da secretária/recepcionista é quando ela está verificando por qual tipo de acesso o porta ou credenciais a pessoa precisará ter acesso para que vc consiga ir entregar a carta. Assim, a recepcionista, irá te informar que vc terá que levar essa carta para um fulano de tal de uma determinada sala do andar x. Assim, vc levando essa carta para esse fulano de tal que se encontra nesse localidade informada pela recepcionista, esse fulano estará cumprindo o papel de controller, para te dizer se essa pessoa se encontra no local, ou não, e como vc poderia fazer para conseguir enviar a tal carta. E, no momento, em que o fulano de tal estiver checando se a tal pessoa está ou não, que é o momento em que a função do Model cumpre o seu papel, pois esse Model estará checando as regras de negócios, ou seja, se está certo ou não essa pessoa estar aqui para entregar a carta ou como deverá ser feito tal processo de entrega.
+
+Esse modelo do prédio que te expliquei acima, convertido em uma visualização mais voltado para o ramo da tecnologia ficaria o seguinte
+
+    Browser -> Web Server -> Aplicação -> Controller -> View -> Browser
+
+Ou seja, a camada onde não tem código que realize alguma alteração na base de dados, é o View e o Controller. Basicamente, podemos resumir o fluxo acima da seguinte forma
+
+    View -> Controller -> Model -> Controller -> View
+
+Ou seja, pela view, que é na aplicação é feita alguma ação que surte em alguma requisição, essa requisição é enviado ao controller, o controller irá avaliar qual tipo de requisição ela é e, com base disso, irá selecionar qual tipo de regra de negócio, entidade, camada precisa ser acessado para realizar alguma ação sobre a base de dados e, depois que feito todo esse processo e com os resultados em mãos, esses resultados são enviados ao controller, assim o controller irá avaliar como será exibido tais resultados e, por fim, a view, apenas, exibirá, em sua aplicação, o tal resultado.
+
+Agora, como é que o Spring Boot entra nessa história? Basicamente, o Spring Boot ela atende todas as camadas do MVC. A questão é que, até agora, focamos somente em Controller e Model, que é o Back-End. Vamos, a partir da próxima aula, vermos como o Spring Boot atua na camada do View.
 
 ## Aula 20 - Artigo: Configuração JPA:
+Atualmente, indicaremos a versão 8 do MySQL e também faremos a alteração da versão do dialeto do banco de dados para a correspondente ao MySQL 8. Segue a atualização dos códigos abaixo.
+
+- No arquivo pom.xml:
+
+        <dependency>
+                <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.32</version>
+        </dependency>
+
+
+- No arquivo application.properties:
+
+        spring.datasource.url=jdbc:mysql://localhost:3306/springboot
+        spring.datasource.username=root
+        spring.datasource.password=12345678
+        
+        spring.jpa.hibernate.ddl-auto=update
+        spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 ## Aula 21 - Configuração JPA:
+Bom, vamos, agora, começar a interagir o nosso banco de dados usando a nossa aplicação, Spring Boot.
+
+Para isso, será necessário realizar a instalação do driver do JPA. Esse passo a passo está sendo explicado no meu repositório sobre introdução à linguagem de progrmaação Java, https://github.com/HelloWounderworld/Introduction-Java-Master, na pasta, curso-udemy, da seção 21 e 24. Basta ler e seguir os passos a passos ou, se quiser, consultar outros tutoriais para realizarmos a configuração do ambiente, também apoio muito!!
+
+Basicamente, vamos precisar adicionar mais algumas dependências no nosso projeto spring-boot, no arquivo, pom.xml, são elas
+
+    <dependency>
+            <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.32</version>
+    </dependency>
+
+Assim, as dependências acrescentadas ficariam como seguinte
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <parent>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>3.2.3</version>
+            <relativePath/> <!-- lookup parent from repository -->
+        </parent>
+        <groupId>jp.com.mathcoder</groupId>
+        <artifactId>exercicios-sboot</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <name>exercicios-sboot</name>
+        <description>Exercícios de Spring Boot</description>
+        <properties>
+            <java.version>17</java.version>
+        </properties>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+            
+            <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+            
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.32</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <scope>runtime</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </build>
+
+    </project>
+
+Agora, no application.properties, que está em, src/main/resources, vamos ter que acrescentar o seguinte
+
+    spring.datasource.url=jdbc:mysql://localhost:3306/springboot
+    spring.datasource.username=root
+    spring.datasource.password=12345678
+    
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+
+Claro, em username e o password com o que vc definiu ao MySQL server.
+
+Agora, vamos criar uma base, springboot, na base MySQL, usando o WorkBench.
+
+Bom, assim, está pronto o ambiente para conseguirmos começar a realizar as devidas implementações.
 
 ## Aula 22 - Inserir Produto #01:
 
