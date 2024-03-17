@@ -658,9 +658,109 @@ Seguir link de leitura:
 ## Aula 11 - Métodos HTTP #02:
 Vamos aplicar o conceito teórico que abordamos acima, para verificar isso na prática.
 
+Para o começo, vamos criar uma nova classe, MetodosHttpController, dentro do pacote, jp.com.mathcoder.exerciciossboot.controllers, e nela realizamos a seguinte implementação
 
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PatchMapping;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    @RestController
+    @RequestMapping("/metodos")
+    public class MetodosHttpController {
+
+        @GetMapping
+        public String get() {
+            return "Requisição GET";
+        }
+        
+        @PostMapping
+        public String post() {
+            return "Requisição POST";
+        }
+        
+        @PutMapping
+        public String put() {
+            return "Requisição PUT";
+        }
+        
+        @PatchMapping
+        public String patch() {
+            return "Requisição PATCH";
+        }
+        
+        @DeleteMapping
+        public String delete() {
+            return "Requisição DELETE";
+        }
+    }
+
+Bom, agora, vamos testar cada um dos métodos que definimos acima.
+
+Mas, para isso, vamos criar um arquivo html e nela realizar a marcação desses métodos para facilitar no teste. Para isso, conseguirmos criar o arquivo html seguindo os seguintes passos a passos
+
+    seleciona a pasta "src/main/resources/static" -> New -> Other -> Wizards: html -> Seleciona "HTML File" da pasta "Web" -> Next -> File_name: formulario.html -> Finish
+
+Isso irá criar um arquivo html dentro da pasta "static" como seguinte
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    </head>
+    <body>
+
+    </body>
+    </html>
+
+Bom, dentro dela, realizamos a seguinte implementação
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+    </head>
+    <body>
+        <h1>Fomulário</h1>
+    </body>
+    </html>
+
+Agora, ao batermos no link, http://localhost:8080/formulario.html, vamos ver que aparecerá, no navegador, o título "Formulário", o que indica que foi capturado o arquivo html.
+
+Bom, vamos usar esse arquivo html de uma forma mais pragmática, pois o foco do nosso estudo está mais no Back-End do que o Front. Então, nesse arquivo, realizamos apenas as seguintes implementações
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+    </head>
+    <body>
+        <h1>Fomulário</h1>
+        
+        <form method="post" action="/metodos">
+            <button>Enviar</button>
+        </form>
+    </body>
+    </html>
+
+Feito a alteração acima, significa que ao apertarmos no botão "Enviar" que definimos acima, iremos acionar o método que esteja mapeado com a requisição "post" da classe que foi mapeado com a path "metodos". Logo, ao atualizarmos o link, http://localhost:8080/formulario.html, aparecerá o botão "Enviar" e ao clicarmos, vamos ver que aparecerá a mensagem
+
+    Requisição POST
+
+que foi definido no método, post, que está sobre o marcador @PostMappgin.
+
+Bom, o teste das outras requisições, podemos realizar apenas alterando "method" para outras requisições como "get", "put", "patch" e "delete". Mas, existe uma forma mais pragmática de realizarmos esses testes que é usando o Postman, que é o que iremos abordar na próxima aula.
 
 ## Aula 12 - Usando Postman:
+
 
 ## Aula 13 - Passando Parâmetros para Web Service #01:
 
