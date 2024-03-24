@@ -1457,10 +1457,107 @@ Feito tais definições acima, então, vamos testar o seguinte pelo Postman, com
 Bom, como podemos ver, deu o erro 400 no Postman, e se vermos o elemento "error" do corpo texto abaixo, vamos conseguir ver que ela está indicando os tipos de erros que está acontecendo, que são exatamente as validações que definimos pela marcação na entidade, Produto.
 
 ## Aula 30 - Consultando Todos os Produtos:
+Bom, visto que conseguimos realizar a nossa inserção dos valores dos produtos dentro da tabela, produto, da base de dados, springboot, vamos, agora, aprender a realizar uma consulta delas.
+
+Na classe, ProdutoController, vamos realizar a seguinte implementação
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+    }
+
+Bom, agora, vamos no Postman e realizar uma requisição, GET, como na imagem abaixo
+
+![Postman](postman-get.png)
+
+Vimos que a requisição, GET, que fizemos acima, acionou o método, obterProduto, da classe, ProdutoController, e puxamos todos os dados dos produtos cadastrados na tabela, produto, da base de dados, springboot.
+
+Bom, da mesma forma, se jogarmos no navegador a url, http://localhost:8080/api/produtos, vamos ver que será exibido, em forma de Json, todos os produtos que foram cadastrados na tabela, produto
+
+![Navegador](navegador-get.png)
+
+Claro, nessa aula, abordamos uma forma simples de realizar a consulta de todos os valores que estão cadastradas na base. Porém, isso é uma má prática, pois se tivermos uma API que realize esse tipo de consulta, isso pode gerar algum estrago na performance do seu sistema. Por isso, realizar uma consulta controlada é uma boa prática, colocando os parâmetros para realizar tais tipos de consultas.
 
 ## Aula 31 - Consultando Produtos por ID:
+Vamos, agora, aprender a realizar consultas de forma mais controlada, que isso se encontra dentro das boas práticas de programação.
+
+Iremos realizar uma consulta pelo "id" do produto que está cadastrado na base de dados. Logo, para isso, na classe, ProdutoController, vamos criar o seguinte método
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+    }
+
+Bom, agora, ao batermos no link, http://localhost:8080/api/produtos/1, por exemplo, vamos conseguir obter o seguinte
+
+![Navegador](navegador-get-id1.png)
+
+Bom, essa é uma das formas controladas de realizamos uma consulta de uma tabela.
 
 ## Aula 32 - Alterando o Produto #01:
+
 
 ## Aula 33 - Alterando o Produto #02:
 
