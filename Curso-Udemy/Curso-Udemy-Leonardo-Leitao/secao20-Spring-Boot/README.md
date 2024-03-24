@@ -1268,14 +1268,76 @@ Daí, conseguimos ver que, agora, o id está sendo sucedido e, ao verificarmos n
 Bom, nessa aula, criamos a entidade, controller e a interface que realiza a persistência do valor do produto.
 
 ## Aula 24 - Injeção de Dependência:
+Vamos abordar sobre o conceito, Injeção de Dependência, donde é um conceito bem importante, visto que ela é aplicado para inversões de controle, que é praticamente inverter à quem está controlando uma determinada ação.
 
-## Aula 25 - Desafio Novo Atributos:
+Seguir link para leitura:
 
-## Aula 26 - Desafio Novo Atributos - Resposta:
+    https://blog.algaworks.com/injecao-de-dependencias-spring/
+
+    https://www.devmedia.com.br/padrao-de-injecao-de-dependencia/18506
+
+    https://www.freecodecamp.org/portuguese/news/uma-rapida-introducao-a-injecao-de-dependencias-o-que-e-e-quando-usa-la/
+
+## Aula 25 e 26 - Desafio Novo Atributos - Reposta:
+Seguir o seguinte desafio.
+
+Dentro da classe, Produto, do pacote, jp.com.mathcoder.exerciciossboot.models.entities, quero que vc coloque mais dois atributos, preço e desconto. E alterar do fluxo de modo que esses dois atributos sejam considerados. Realizar o teste pelo Postman.
 
 ## Aula 27 - Simplificando Inserir Produto:
+Bom, até agora, dentro do método, novoProduto, que foi criado dentro da classe, ProdutoController, tivemos todo o trabalho de instanciar a entidade, Produto, e definir os parâmetros, dentro do argumento do método, novoProduto, para evidenciar os valores que queremos passar ao realizar a requisição, POST. Porém, existe uma maneira bem mais simples de conseguir inserir o produto sem a necessidade de realizar todo esse processo. No caso, realizamos o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+    }
+
+Agora, ao realizarmos uma requisição, POST, pelo Postman, da seguinte forma, como a imagem abaixo, vamos ver o seguinte
+
+![Postman](postman-post-send-simplfy.png)
+
+Assim, ao analisarmos na tabela, produto, da base de dados, springboot, vamos ver que esse produto que enviamos a requisição, POST, pelo Postman, foi inserido.
+
+Bom, até agora, o foco do que fizemos foi em inserção de produtos na base de dados e a sua persistência. Não abordamos nada sobre a regra de negócio e a sua forma de validação, o que possibilita, inclusive, de colocar produtos com valores absurdos, como valores negativos. Bom, iremos, na próxima aula, realizar uma implementação de tais validações de forma simples.
 
 ## Aula 28 - Um aviso sobre a próxima aula:
+Na aula a seguir sobre as validações simples haverá um problema, o Spring boot atualizou, e a partir da versão 2.3 essa API de validação necessita ser adicionada nas dependências para funcionar corretamente.
+
+Segue o link das notas dessa versão e mensagem sobre a mudança:
+
+Release 2.3 Spring: 
+
+    https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.3-Release-Notes#validation-starter-no-longer-included-in-web-starters
+
+Enfim, basta adicionar essa dependência e será resolvido o problema ao tentar importar alguns recursos usados na aula:
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+Feito isso, se você atualizar o projeto e não funcionar, por favor, reinicie o Eclipse.
+
+Bons estudos!
 
 ## Aula 29 - Aplicando Validações Simples:
 

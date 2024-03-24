@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jp.com.mathcoder.exerciciossboot.models.Cliente;
+import jp.com.mathcoder.exerciciossboot.models.entities.Cliente;
 
 @RestController
 @RequestMapping("/clientes")

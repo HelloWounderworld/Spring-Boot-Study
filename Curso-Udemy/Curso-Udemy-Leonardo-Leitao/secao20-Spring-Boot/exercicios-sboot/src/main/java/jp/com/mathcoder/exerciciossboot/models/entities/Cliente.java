@@ -1,4 +1,4 @@
-package jp.com.mathcoder.exerciciossboot.models;
+package jp.com.mathcoder.exerciciossboot.models.entities;
 
 public class Cliente {
 
