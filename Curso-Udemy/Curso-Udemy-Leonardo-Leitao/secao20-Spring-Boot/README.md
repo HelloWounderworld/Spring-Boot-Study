@@ -1340,6 +1340,121 @@ Feito isso, se você atualizar o projeto e não funcionar, por favor, reinicie o
 Bons estudos!
 
 ## Aula 29 - Aplicando Validações Simples:
+Bom, como havía comentado antes, as validações que iremos implementar, todas elas, serão no Model, seguindo as boas práticas.
+
+No caso, existem várias formas de colocar isso, desde criando vários métodos para realizar essa conferência ou, até mesmo, implementando as condicionais. Nessa aula, iremos usar as marcações que o Spring Boot nos disponibiliza para conseguirmos definir a arquitetura da tabela sobre as entidades.
+
+Logo, na classe, Produto, atribuir as seguinte marcações @NotBlank, @Min e @Max, que será para definirmos os valores que podem ser colocados ou não dentro de uma coluna da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.models.entities;
+
+    import jakarta.persistence.Entity;
+    import jakarta.persistence.GeneratedValue;
+    import jakarta.persistence.GenerationType;
+    import jakarta.persistence.Id;
+    import jakarta.validation.constraints.Max;
+    import jakarta.validation.constraints.Min;
+    import jakarta.validation.constraints.NotBlank;
+
+    @Entity
+    public class Produto {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int id;
+        
+        @NotBlank
+        private String nome;
+        
+        @Min(0)
+        private double preco;
+        
+        @Min(0)
+        @Max(1)
+        private double desconto;
+        
+        public Produto() {
+            
+        }
+        
+        public Produto(String nome, double preco, double desconto) {
+            super();
+            this.nome = nome;
+            this.preco = preco;
+            this.desconto = desconto;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+
+        public double getPreco() {
+            return preco;
+        }
+
+        public void setPreco(double preco) {
+            this.preco = preco;
+        }
+
+        public double getDesconto() {
+            return desconto;
+        }
+
+        public void setDesconto(double desconto) {
+            this.desconto = desconto;
+        }
+        
+    }
+
+Basicamente, o que fizemos acima, foi em definir que a coluna, nome, não pode estar vazio e as duas colunas, preco e desconto, os seus respectivos tipos de valores que eu posso colocar dentro dela.
+
+Agora, precisamos considerar essas validações, então na classe, ProdutoController, vamos realizar a marcação de que ao ser direcionado nessa requisição, POST, que seja acionado a validação definida pelo Model, usando @Valid
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+    }
+
+Feito tais definições acima, então, vamos testar o seguinte pelo Postman, como consta na imagem abaixo
+
+![Postman](postman-post-send-invalid.png)
+
+![Postman](postman-post-send-invalid2.png)
+
+Bom, como podemos ver, deu o erro 400 no Postman, e se vermos o elemento "error" do corpo texto abaixo, vamos conseguir ver que ela está indicando os tipos de erros que está acontecendo, que são exatamente as validações que definimos pela marcação na entidade, Produto.
 
 ## Aula 30 - Consultando Todos os Produtos:
 
