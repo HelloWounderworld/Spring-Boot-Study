@@ -1133,9 +1133,139 @@ Bom, assim, está pronto o ambiente para conseguirmos começar a realizar as dev
 
 Para verificarmos que ocorreu certo, bastaria rodar, novamente, o projeto e no console não irá exibir nenhum erro e, além disso, continuamos a conseguir acessar a url, http://localhost:8080/ola, sem nenhum problema.
 
-## Aula 22 - Inserir Produto #01:
+## Aula 22 e 23 - Inserir Produto #01 e #02:
+Vamos, agora, realizar a criação do nosso web service e, nela, iremos realizar o processo de inserção de produtos.
 
-## Aula 23 - Inserir Produto #02:
+Bom, nesse processo de inserção iremos estabelecer uma série de regra de negócios para validações do tipo de inserção. Esse processo é feito inteiramente no Model. O controller, somente, irá exercer a função de apontar para a regra de negócio certo perante ao tipo de requisição que é feito.
+
+Para o começo, dentro do pacote, jp.com.mathcoder.exerciciossboot.models, vamos criar um novo pacote, jp.com.mathcoder.exerciciossboot.models.entities, e dentro desse pacote, vamos mover a classe, Clientes, e dentro dela, criamos uma nova classe, Produto, e inserimos o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.models.entities;
+
+    import jakarta.persistence.Entity;
+    import jakarta.persistence.GeneratedValue;
+    import jakarta.persistence.GenerationType;
+    import jakarta.persistence.Id;
+
+    @Entity
+    public class Produto {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int id;
+        
+        private String nome;
+        
+        public Produto() {
+            
+        }
+        
+        public Produto(String nome) {
+            super();
+            this.nome = nome;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+        
+    }
+
+Agora, vamos precisar criar uma interface para que seja realizado a persistencia de um produto. Então, criamos, primeiro, o seguinte pacote, jp.com.mathcoder.exerciciossboot.models.repositories, dentro do pacote, jp.com.mathcoder.exerciciossboot.models, e nela criamos a seguinte interface, ProdutoRepository, e inserimos o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.models.repositories;
+
+    import org.springframework.data.repository.CrudRepository;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    public interface ProdutoRepository extends CrudRepository<Produto, Integer> {
+ 
+    }
+
+Agora, dentro do pacote, jp.com.mathcoder.exerciciossboot.controllers, vamos criar uma nova classe, ProdutoController, e nela inserimos o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+
+        @PostMapping
+        public Produto novoProduto(@RequestParam String nome) {
+            Produto produto = new Produto(nome);
+            
+            return produto;
+        }
+    }
+
+Agora, rodando o projeto, vamos bater no seguinte link, localhost:8080/api/produtos, isso usando o Postman. Então, abrindo esse app, nela inserimos o seguinte como consta na imagem
+
+![Postman](postman-post-url-with-param.png)
+
+Note que, na imagem acima, no Body, selecionamos a opção "x-www-form-urlencoded" e no key colocamos "nome" e no value "Caneta Bic Preta". Ou seja, estamos definindo os parâmetros que serão enviados para o controller, ProdutoController, na requisição post. Ou seja, o parâmetro, nome, e o que colocamos no value, será exatamente o que vams receber em @RequestParam do método, novoProduto, que definimos. Ao darmos o send, vamos ver o seguinte
+
+![Postman](postman-post-url-with-param-send.png)
+
+Ou seja, ao darmos o "Send", vamos será acionado a classe, ProdutoController, e dentro dela será acionado o método, novoProduto, visto que esse está marcado como requisição POST, e nisso será instanciado o valor no parâmetro nome, Caneta Bic Preta, da classe/entidade, Produto, e isso irá fazer com que seja marcado na base de dados, springboot, onde será criado uma tabela, produto, que ao darmos o select para consultar, vamos ver que esse valor, Caneta Bic Preta, não foi registrado. Bom, é só lembrar os conceitos estudados em JPA para entender o motivo disso.
+
+Bom, por hora, não é para ser registrado mesmo, pois iremos querer abordar sobre Injeção de Dependências. Logo, na classe, ProdutoController, por hora, vamos deixar colocado o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(@RequestParam String nome) {
+            Produto produto = new Produto(nome);
+            produtoRepository.save(produto);
+            return produto;
+        }
+    }
+
+Ou seja, incluímos a marcação @Autowired sobre a interface, ProdutoRepository, que indica que será colocado, automaticamente, um objeto dentro dessa interface, donde podemos chamar esse atributo que definimos dentro do método, novoProduto, e nela, salvar o valor do produto.
+
+Agora, vamos usar o Postman com a requisição, POST, para verificarmos o que aconteceu com a inserção acima, conforme a imagem abaixo
+
+![Postman](postman-post-send.png)
+
+Daí, conseguimos ver que, agora, o id está sendo sucedido e, ao verificarmos na base, springboot, da tabela, produto, conseguimos ver que, agora, sim, está sendo registrado o valor que definimos no Body. Assim, se testarmos, colocando no value, Lapis Preto, e, novamente, dando o Send sobre a requisição, POST, vamos conseguir ver que será registrado na tabela, produto, da base, springboot.
+
+Bom, nessa aula, criamos a entidade, controller e a interface que realiza a persistência do valor do produto.
 
 ## Aula 24 - Injeção de Dependência:
 
