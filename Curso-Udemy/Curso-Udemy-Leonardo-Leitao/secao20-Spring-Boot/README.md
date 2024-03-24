@@ -1557,7 +1557,80 @@ Bom, agora, ao batermos no link, http://localhost:8080/api/produtos/1, por exemp
 Bom, essa é uma das formas controladas de realizamos uma consulta de uma tabela.
 
 ## Aula 32 - Alterando o Produto #01:
+Agora, vamos aprender a realizar o Update nos dados dos produtos que já se encontra na nossa base de dados.
 
+Bom, iremos apresentar duas maneiras de realizarmos esse processo. Uma forma será nessa aula, e a outra na próxima aula.
+
+Então, na classe, ProdutoController, vamos criar um novo método como seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @PostMapping
+        public @ResponseBody Produto novoProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+        @PutMapping
+        public Produto alterarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+    }
+
+Bom, criamos um novo método, alterarProduto, e nela colocamos a marcação @PutMapping para conseguirmos realizar a alteração do produto.
+
+Agora, vamos testar isso pelo Postman como seguinte
+
+![Postman](postman-put.png)
+
+Basicamente, na requisição, PUT, no Body, foi colocado os parâmetro id, para identificarmos o produto, e nos outros parâmetros, os respectivos valores que queremos alterar. Ao darmos o Send, será retornado o seguinte
+
+![Postman](postman-put-send.png)
+
+No caso, foi feito a alteração, e ao consultarmos na tabela, produto, da base de dados, springboot, vamos conseguir ver que no id, 3, foi feito a devida alteração.
+
+Ao, realizarmos a requisição, GET, na path, http://localhost:8080/api/produtos/4, vamos ver que será mostrado o MacBook
+
+![Postman](postman-get-macbook.png)
+
+No caso, realizamos a seguinte alteração com a requisição, PUT, como seguinte
+
+![Postman](postman-put-macbook.png)
+
+Ao consultarmos na base de dados, vamos ver que foi feito a atualização.
 
 ## Aula 33 - Alterando o Produto #02:
 
