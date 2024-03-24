@@ -1768,6 +1768,265 @@ Agora, vamos testar esse método utilizando o Postman, como seguinte
 Como podemos ver, foi excluído o produto com id, 8. Assim, consultando na base, isso ficaria evidente.
 
 ## Aula 35 - Consulta Paginada:
+Vamos, agora, usando o Spring Boot, a aprender a realizar uma consulta paginada.
+
+Bom, na classe, ProdutoController, vamos criar o seguinte método
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+    //	@PostMapping
+        @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+        public @ResponseBody Produto salvarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/pagina/{numeroPagina}")
+        public Page<Produto> obterPordutosPorPagina(@PathVariable int numeroPagina) {
+            Pageable page = PageRequest.of(0, 3);
+            return produtoRepository.findAll(page);
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+    //	@PutMapping
+    //	public Produto alterarProduto(@Valid Produto produto) {
+    //		produtoRepository.save(produto);
+    //		return produto;
+    //	}
+        
+        @DeleteMapping(path="/{id}")
+        public void excluirProduto(@PathVariable int id) {
+            produtoRepository.deleteById(id);
+        }
+    }
+
+Agora, na interface, ProdutoRepository, vamos mudar o "CrudReposiotry" para "PagingAndSortingRepository", onde dentro dela, haverá, não somente os cruds básicos que temos no "CrudRepository", como, também, os métodos de paginações
+
+    package jp.com.mathcoder.exerciciossboot.models.repositories;
+
+    import org.springframework.data.repository.PagingAndSortingRepository;
+    import org.springframework.data.repository.CrudRepository;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    public interface ProdutoRepository extends CrudRepository<Produto, Integer>, PagingAndSortingRepository<Produto, Integer> {
+        
+    }
+
+Bom, como no método, obterProdutosPorPagina, está definido no valor fixo, ao batermos no link, http://localhost:8080/api/produtos/pagina/0, pelo navegador, vamos ver que será exibido, somente, 3 elementos em json.
+
+Bom, agora, se colocarmos no parâmetro onde fica o número da página o argumento, numeroPagina, como seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+    //	@PostMapping
+        @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+        public @ResponseBody Produto salvarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/pagina/{numeroPagina}")
+        public Page<Produto> obterPordutosPorPagina(@PathVariable int numeroPagina) {
+            Pageable page = PageRequest.of(numeroPagina, 3);
+            return produtoRepository.findAll(page);
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+    //	@PutMapping
+    //	public Produto alterarProduto(@Valid Produto produto) {
+    //		produtoRepository.save(produto);
+    //		return produto;
+    //	}
+        
+        @DeleteMapping(path="/{id}")
+        public void excluirProduto(@PathVariable int id) {
+            produtoRepository.deleteById(id);
+        }
+    }
+
+E ficarmos batendo no link, http://localhost:8080/api/produtos/pagina/0, alternando para, http://localhost:8080/api/produtos/pagina/1, http://localhost:8080/api/produtos/pagina/2, etc,..., onde no total, é mostrado que pode ser exibido até página 4, como consta no json
+
+    pageable": {
+        "pageNumber": 1,
+        "pageSize": 3,
+        "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+        },
+        "offset": 3,
+        "paged": true,
+        "unpaged": false
+    },
+    "totalPages": 4,
+    "totalElements": 10,
+    "last": false,
+    "first": false,
+    "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+    },
+    "size": 3,
+    "number": 1,
+    "numberOfElements": 3,
+    "empty": false
+
+na parte onde está escrito, totalPages, vamos ver sendo exibido os produtos cadastrados na base, conforme a página.
+
+Onde estiver escrito, 3, em
+
+    Pageable page = PageRequest.of(numeroPagina, 3);
+
+indica o número de elementos que vc quer que seja exibido na página.
+
+Bom, podemos, então acrescentar como parâmetro a quantidade como seguinte
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+    //	@PostMapping
+        @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+        public @ResponseBody Produto salvarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/pagina/{numeroPagina}/{qtdPagina}")
+        public Page<Produto> obterPordutosPorPagina(@PathVariable int numeroPagina, @PathVariable int qtdPagina) {
+            if(qtdPagina >= 5) qtdPagina = 5;
+            Pageable page = PageRequest.of(numeroPagina, qtdPagina);
+            return produtoRepository.findAll(page);
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+    //	@PutMapping
+    //	public Produto alterarProduto(@Valid Produto produto) {
+    //		produtoRepository.save(produto);
+    //		return produto;
+    //	}
+        
+        @DeleteMapping(path="/{id}")
+        public void excluirProduto(@PathVariable int id) {
+            produtoRepository.deleteById(id);
+        }
+    }
+
+Assim, ao batermos no link, http://localhost:8080/api/produtos/pagina/0/5, estamos dizendo que queremos que seja retornado 5 elementos na primeira página
+
+![Navegador](navegador-pageable.png)
+
+Bom, as boas práticas indicam que, na quantidade de exibição de elementos por página, vc coloque um limite de forma que não corra o risco do usuário colocar um valor muito alto e isso comprometer o desempenho do sistema.
+
+Em sistemas reais, esse método, obterPordutosPorPagina, não costuma existir. Ou se existir, ela, geralmente, fica restrito somente à certos tipos de usuários para o uso.
 
 ## Aula 36 - Consulta de Produto por Nome:
 
