@@ -1633,6 +1633,71 @@ No caso, realizamos a seguinte alteração com a requisição, PUT, como seguint
 Ao consultarmos na base de dados, vamos ver que foi feito a atualização.
 
 ## Aula 33 - Alterando o Produto #02:
+Vamos, agora, te ensinar uma segunda forma de realizarmos o Update, que seria utilizando a requisição, POST.
+
+Bom, na classe, ProdutoController, no método, novoProduto, vamos mudar para, salvarProduto, e nela iremos colocar mais de uma requisição que aciona esse método e comentamos o método, alterarProduto, da seguinte forma
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+        @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+        public @ResponseBody Produto salvarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+    //	@PutMapping
+    //	public Produto alterarProduto(@Valid Produto produto) {
+    //		produtoRepository.save(produto);
+    //		return produto;
+    //	}
+    }
+
+Bom, agora, vamos utilizar o Postman para testar se esse mesmo método, salvarProduto, cumpre a função de inserir produto e alterar o valor do produto, conforme o tipo de requisição que formos enviando
+
+![Postman](postman-post-salvarProduto.png)
+
+Bom, para a requisição, POST, acima, foi feito a inclusão do produto sem nenhum problema.
+
+Agora, testamos a requisição, PUT, para verificarmos se conseguimos alterar o produto e iremos alterar exatamente o produto que acabamos de inserir
+
+![Postman](postman-put-salvarProduto.png)
+
+Vemos que foi feito a alteração de forma bem sucedida.
+
+Ou seja, significa que o método, salvarProduto, está atendendo às duas requisições, POST e PUT.
 
 ## Aula 34 - Excluindo o Produto por ID:
 
