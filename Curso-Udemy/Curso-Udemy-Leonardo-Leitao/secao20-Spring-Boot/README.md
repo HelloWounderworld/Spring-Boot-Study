@@ -2154,3 +2154,32 @@ E mudamos da mesma forma no método, obterProdutosPorNome.
 Assim, ao realizarmos a busca da mesma forma como fizemos acima, agora, vamos ver que, independente se a letra é maiúscula ou minúscula, vamos conseguir realizar a busca na base.
 
 ## Aula 37 - Mais Consultas:
+Vamos aprender mais sobre consulta.
+
+Coloquei uma lista das consultas que vc poderia testar para brincar mais sobre consultas
+
+    package jp.com.mathcoder.exerciciossboot.models.repositories;
+
+    import org.springframework.data.repository.PagingAndSortingRepository;
+    import org.springframework.data.repository.query.Param;
+    import org.springframework.data.jpa.repository.Query;
+    import org.springframework.data.repository.CrudRepository;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    public interface ProdutoRepository extends CrudRepository<Produto, Integer>, PagingAndSortingRepository<Produto, Integer> {
+        
+        public Iterable<Produto> findByNomeContainingIgnoreCase(String parteNome);
+        
+    //	findByNomeContaining
+    //	findByNomeIsContaining
+    //	findByNomeContains
+    //	
+    //	findByNomeStartsWith
+    //	findByNomeEndsWith
+    //	
+    //	findByNomeNotContaining
+        
+        @Query("SELECT p FROM Produto p WHERE p.nome LIKE %:nome%")
+        public Iterable<Produto> searchByNameLike(@Param("nome") String nome);
+    }
