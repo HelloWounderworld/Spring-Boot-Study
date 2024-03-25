@@ -2029,5 +2029,128 @@ Bom, as boas práticas indicam que, na quantidade de exibição de elementos por
 Em sistemas reais, esse método, obterPordutosPorPagina, não costuma existir. Ou se existir, ela, geralmente, fica restrito somente à certos tipos de usuários para o uso.
 
 ## Aula 36 - Consulta de Produto por Nome:
+Vamos, agora, aprender a realizar uma consulta através do nome do produto.
+
+Basicamente, em um conjunto de dados de produto costumamos ter um conjunto de palavras que se repetem. No caso, o que vamos realizar seria uma busca com base desses tipos de palavras usando o Spring Boot.
+
+Para isso, na interface, ProdutoRepository, vamos definir o seguinte método
+
+    package jp.com.mathcoder.exerciciossboot.models.repositories;
+
+    import org.springframework.data.repository.PagingAndSortingRepository;
+    import org.springframework.data.repository.CrudRepository;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    public interface ProdutoRepository extends CrudRepository<Produto, Integer>, PagingAndSortingRepository<Produto, Integer> {
+        
+        public Iterable<Produto> findByNomeContaining(String parteNome);
+    }
+
+No caso, é um método genérico.
+
+Agora, na classe, ProdutoController, iremos definir o seguinte método, obterProdutosPorNome
+
+    package jp.com.mathcoder.exerciciossboot.controllers;
+
+    import java.util.Optional;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.web.bind.annotation.DeleteMapping;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.PathVariable;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.PutMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestMethod;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import jakarta.validation.Valid;
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+    import jp.com.mathcoder.exerciciossboot.models.repositories.ProdutoRepository;
+
+    @RestController
+    @RequestMapping("/api/produtos")
+    public class ProdutoController {
+        
+        @Autowired
+        private ProdutoRepository produtoRepository;
+
+    //	@PostMapping
+        @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+        public @ResponseBody Produto salvarProduto(@Valid Produto produto) {
+            produtoRepository.save(produto);
+            return produto;
+        }
+        
+        @GetMapping
+        public Iterable<Produto> obterProdutos() {
+            return produtoRepository.findAll();
+        }
+        
+        @GetMapping(path="/nome/{parteNome}")
+        public Iterable<Produto> obterProdutosPorNome(@PathVariable String parteNome) {
+            return produtoRepository.findByNomeContaining(parteNome);
+        }
+        
+        @GetMapping(path="/pagina/{numeroPagina}/{qtdPagina}")
+        public Page<Produto> obterPordutosPorPagina(@PathVariable int numeroPagina, @PathVariable int qtdPagina) {
+            if(qtdPagina >= 5) qtdPagina = 5;
+            Pageable page = PageRequest.of(numeroPagina, qtdPagina);
+            return produtoRepository.findAll(page);
+        }
+        
+        @GetMapping(path="/{id}")
+        public Optional<Produto> obterProdutoPorId(@PathVariable int id) {
+            return produtoRepository.findById(id);
+        }
+        
+    //	@PutMapping
+    //	public Produto alterarProduto(@Valid Produto produto) {
+    //		produtoRepository.save(produto);
+    //		return produto;
+    //	}
+        
+        @DeleteMapping(path="/{id}")
+        public void excluirProduto(@PathVariable int id) {
+            produtoRepository.deleteById(id);
+        }
+    }
+
+Agora, vamos testar se esse método está funcionando. Então, iremos bater no seguinte link, http://localhost:8080/api/produtos/nome/BIC, no navegador. Se for filtrado um json com o nome de produto que contem a palavra "BIC, então significa que deu certo, como abaixo
+
+    // 20240325092903
+    // http://localhost:8080/api/produtos/nome/BIC
+
+    [
+        {
+            "id": 3,
+            "nome": "Caneta BIC Vermelha",
+            "preco": 8.99,
+            "desconto": 0.01
+        }
+    ]
+
+Bom, na busca, por convenção, podemos colocar de forma que ignora se é letra maiúscula ou minúscula. No caso, na interface, ProdutoRepository, vamos colocar o seguinte
+
+    package jp.com.mathcoder.exerciciossboot.models.repositories;
+
+    import org.springframework.data.repository.PagingAndSortingRepository;
+    import org.springframework.data.repository.CrudRepository;
+
+    import jp.com.mathcoder.exerciciossboot.models.entities.Produto;
+
+    public interface ProdutoRepository extends CrudRepository<Produto, Integer>, PagingAndSortingRepository<Produto, Integer> {
+        
+        public Iterable<Produto> findByNomeContainingIgnoreCase(String parteNome);
+    }
+
+E mudamos da mesma forma no método, obterProdutosPorNome.
+
+Assim, ao realizarmos a busca da mesma forma como fizemos acima, agora, vamos ver que, independente se a letra é maiúscula ou minúscula, vamos conseguir realizar a busca na base.
 
 ## Aula 37 - Mais Consultas:
